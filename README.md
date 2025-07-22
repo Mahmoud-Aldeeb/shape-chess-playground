@@ -94,3 +94,13 @@ This project is a fun and simple web application that includes two main features
 - **Responsive Design**: Adapts to different screen sizes using Bootstrap
 - **Modern Animations**: GSAP library for smooth visual effects
 - **Interactive Canvas**: SVG.js for precise shape rendering
+
+  ### 📡 CDN vs NPM: Why This Choice?
+
+One notable design decision in this project was to use **CDN (Content Delivery Network)** links instead of **NPM packages** for including external libraries such as Bootstrap, jQuery, GSAP, and SVG.js. This approach was selected for the following benefits:
+
+- ✅ No need for installing Node.js or running `npm install`
+- ✅ Lightweight and easily shareable project structure
+- ✅ Runs instantly in the browser with no build step
+- ✅ Leverages fast, globally distributed CDN servers
+- ✅ Ideal for educational or demo purposes
