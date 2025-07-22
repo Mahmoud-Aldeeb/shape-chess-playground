@@ -1,5 +1,3 @@
-// js/shape.js - باستخدام مكتبة SVG.js وتحكم يدوي في رسم المضلع
-
 $(document).ready(function () {
   const $canvas = $("#canvas");
   let isDrawMode = false;
