@@ -1,0 +1,26 @@
+body {
+  background-color: #f8f9fa;
+}
+.shape {
+  cursor: move;
+}
+
+#canvas1 {
+  width: 324px;
+  height: auto;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  border: 2px solid #000;
+  background-color: #f0f0f0;
+}
+.chess-tile {
+  box-sizing: border-box;
+}
+.highlight {
+  outline: 2px solid yellow !important;
+}
+button {
+  display: block;
+  margin: 20px auto;
+}
