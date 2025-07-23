@@ -1,6 +1,6 @@
 # 🎮 Shape Playground & Mini Chess Game
 
-**Live Demo**: [https://your-project-name.netlify.app](https://aesthetic-babka-b1cea3.netlify.app/)
+**Live Demo**: [https://your-project-name.netlify.app](https://fabulous-meringue-f5a5b1.netlify.app/)
 
 ## 📝 Description
 
@@ -60,7 +60,16 @@ This project is a fun and simple web application that includes two main features
 - Chrome extensions may slightly affect results - for accurate testing, use incognito mode.
 - The application follows modern web development best practices for optimal user experience.
 
+
+### Mobile UX Improvements:
+- Added touch visual feedback with animated circles
+- Improved button sizing and spacing for touch targets
+- Added status indicator for draw mode
+- Enhanced form elements for better touch interaction
+
 ---
+
+
 
 ## 🧑‍💻 How to Run
 
@@ -94,6 +103,8 @@ This project is a fun and simple web application that includes two main features
 - **Responsive Design**: Adapts to different screen sizes using Bootstrap
 - **Modern Animations**: GSAP library for smooth visual effects
 - **Interactive Canvas**: SVG.js for precise shape rendering
+
+
 
   ### 📡 CDN vs NPM: Why This Choice?
 
