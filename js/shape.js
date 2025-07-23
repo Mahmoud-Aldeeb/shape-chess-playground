@@ -4,7 +4,7 @@ $(document).ready(function () {
   let customPolygonPoints = [];
   let svgCanvas = null;
 
-  // show button when draw three points or more
+  // show button when drawing three points or more
   const drawPolygonBtn = $("#confirmPolygon");
 
   // button delete all draw
@@ -23,7 +23,7 @@ $(document).ready(function () {
 
   // Clear all drawings button
   clearBtn.on("click", () => {
-    // Delete all elements inside the canvas (including svg) except the form and buttons.
+    // Delete all elements inside the canvas (including SVG) except the form and buttons.
     $canvas
       .find("*")
       .not("#shapeForm, #drawMode, #confirmPolygon, #clearCanvas")
@@ -125,38 +125,70 @@ $(document).ready(function () {
   }
 
   function makeDraggable($el) {
-    // When the mouse button is pressed down on the element ($el)
-    $el.on("mousedown", (e) => {
-      e.preventDefault(); // Prevent the default action (e.g., text selection during dragging)
+    let isDragging = false;
+    let startX, startY;
+    let initialMouseX, initialMouseY;
 
-      // Calculate the offset between the mouse click and the element's top-left corner
-      const shiftX = e.clientX - $el.offset().left;
-      const shiftY = e.clientY - $el.offset().top;
+    // Helper function to handle both mouse and touch events
+    const getClientCoordinates = (event) => {
+      if (event.type.includes("touch")) {
+        return {
+          clientX: event.touches[0].clientX,
+          clientY: event.touches[0].clientY,
+        };
+      } else {
+        return {
+          clientX: event.clientX,
+          clientY: event.clientY,
+        };
+      }
+    };
 
-      // Function to move the element based on mouse movement
-      const moveAt = (e) => {
-        $el.css({
-          // e.pageX and e.pageY are the mouse coordinates on the screen.
-          left: e.pageX - $canvas.offset().left - shiftX, // Update position based on mouse movement
-          top: e.pageY - $canvas.offset().top - shiftY, // Adjust for the initial click position
-        });
-      };
+    // Start dragging
+    $el.on("mousedown touchstart", (e) => {
+      e.preventDefault();
+      isDragging = true;
 
-      // Call moveAt on mousemove to continuously update the element's position
-      const onMouseMove = (e) => {
-        moveAt(e);
-      };
+      const { clientX, clientY } = getClientCoordinates(e);
 
-      // Track mousemove globally (on the document) while dragging
-      $(document).on("mousemove", onMouseMove);
+      startX = $el.position().left;
+      startY = $el.position().top;
+      initialMouseX = clientX;
+      initialMouseY = clientY;
 
-      // Stop tracking mousemove when mouse button is released (mouseup)
-      $(document).on("mouseup", function () {
-        $(document).off("mousemove", onMouseMove); // Unbind the mousemove event
+      $el.css("cursor", "grabbing");
+
+      // Add visual feedback for touch
+      if (e.type === "touchstart") {
+        $el.css("opacity", "0.8");
+      }
+    });
+
+    // Dragging movement
+    $(document).on("mousemove touchmove", (e) => {
+      if (!isDragging) return;
+
+      const { clientX, clientY } = getClientCoordinates(e);
+
+      const deltaX = clientX - initialMouseX;
+      const deltaY = clientY - initialMouseY;
+
+      $el.css({
+        left: startX + deltaX + "px",
+        top: startY + deltaY + "px",
       });
     });
 
-    // Prevent the default dragstart behavior to avoid conflicts with the custom drag functionality
+    // Stop dragging
+    $(document).on("mouseup touchend", () => {
+      if (isDragging) {
+        isDragging = false;
+        $el.css("cursor", "grab");
+        $el.css("opacity", "1");
+      }
+    });
+
+    // Prevent default drag behavior
     $el.on("dragstart", () => false);
   }
 
@@ -176,16 +208,37 @@ $(document).ready(function () {
   });
 
   // Scoring in Draw Mode
-  $canvas.on("click", function (e) {
+  $canvas.on("click touchstart", function (e) {
     // If draw mode is off (isDrawMode == false), do nothing
     if (!isDrawMode) return;
+
+    // Prevent default behavior for touch events to avoid scrolling
+    if (e.type === "touchstart") {
+      e.preventDefault();
+    }
 
     // Get the offset of the canvas relative to the document to calculate coordinates accurately
     const offset = $canvas.offset();
 
+    // Handle both mouse and touch events
+    const pageX = e.type === "touchstart" ? e.touches[0].pageX : e.pageX;
+    const pageY = e.type === "touchstart" ? e.touches[0].pageY : e.pageY;
+
     // Calculate the actual coordinates of the clicked point based on where the user clicked within the canvas
-    const x = e.pageX - offset.left;
-    const y = e.pageY - offset.top;
+    const x = pageX - offset.left;
+    const y = pageY - offset.top;
+
+    // Create touch indicator effect
+    const $indicator = $('<div class="touch-indicator"></div>').css({
+      left: x + "px",
+      top: y + "px",
+    });
+
+    $canvas.append($indicator);
+
+    setTimeout(() => {
+      $indicator.remove();
+    }, 500);
 
     // Ensure that we have an SVG canvas set up for drawing shapes
     ensureSVGCanvas();
